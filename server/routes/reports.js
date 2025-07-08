@@ -23,7 +23,8 @@ router.get('/payments/pdf', auth, authorizeRoles('Manager', 'Timekeeper'), async
     doc.moveDown();
 
     payments.forEach(payment => {
-      doc.fontSize(12).text(`Subcontractor: ${payment.subcontractor ? payment.subcontractor.name : 'N/A'}`);
+      doc.fontSize(12).text(`Payment ID: ${payment._id}`);
+      doc.text(`Subcontractor: ${payment.subcontractor ? payment.subcontractor.name : 'N/A'}`);
       doc.text(`Contract Type: ${payment.contract ? payment.contract.contractType : 'N/A'}`);
       doc.text(`Amount: ${payment.amount}`);
       doc.text(`Payment Date: ${new Date(payment.paymentDate).toLocaleDateString()}`);
