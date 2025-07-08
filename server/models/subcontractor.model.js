@@ -38,6 +38,11 @@ const subcontractorSchema = new Schema({
     required: true,
     enum: ['active', 'inactive', 'onboarding'],
     default: 'onboarding'
+  },
+  site: {
+    type: Schema.Types.ObjectId,
+    ref: 'Site',
+    required: false // Can be null if not assigned to a specific site yet
   }
 }, {
   timestamps: true,

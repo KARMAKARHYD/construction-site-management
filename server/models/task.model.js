@@ -35,7 +35,12 @@ const taskSchema = new Schema({
     date: { type: Date, default: Date.now },
     description: String,
     photos: [String] // Array of photo URLs
-  }]
+  }],
+  site: {
+    type: Schema.Types.ObjectId,
+    ref: 'Site',
+    required: false
+  }
 }, {
   timestamps: true,
 });

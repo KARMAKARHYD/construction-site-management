@@ -11,7 +11,9 @@ router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper'
 
 // Add a new subcontractor
 router.route('/add').post(auth, authorizeRoles('Manager'), (req, res) => {
-  const newSubcontractor = new Subcontractor(req.body);
+  const { user, name, contactPerson, phone, email, address, status, site } = req.body;
+
+  const newSubcontractor = new Subcontractor({ user, name, contactPerson, phone, email, address, status, site });
 
   newSubcontractor.save()
     .then(() => res.json('Subcontractor added!'))
@@ -35,6 +37,7 @@ router.route('/update/:id').post(auth, authorizeRoles('Manager'), (req, res) => 
       subcontractor.email = req.body.email;
       subcontractor.address = req.body.address;
       subcontractor.status = req.body.status;
+      subcontractor.site = req.body.site;
 
       subcontractor.save()
         .then(() => res.json('Subcontractor updated!'))

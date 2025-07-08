@@ -13,7 +13,9 @@ router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) 
 
 // Add a new wage report
 router.route('/add').post(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
-  const newWageReport = new WageReport(req.body);
+  const { worker, subcontractor, dateFrom, dateTo, totalHours, totalOvertimeHours, totalWage, advances, netPay, status, site } = req.body;
+
+  const newWageReport = new WageReport({ worker, subcontractor, dateFrom, dateTo, totalHours, totalOvertimeHours, totalWage, advances, netPay, status, site });
 
   newWageReport.save()
     .then(() => res.json('Wage report added!'))
@@ -43,6 +45,7 @@ router.route('/update/:id').post(auth, authorizeRoles('Manager', 'Timekeeper'), 
       report.advances = req.body.advances;
       report.netPay = req.body.netPay;
       report.status = req.body.status;
+      report.site = req.body.site;
 
       report.save()
         .then(() => res.json('Wage report updated!'))

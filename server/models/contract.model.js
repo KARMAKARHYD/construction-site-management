@@ -35,6 +35,11 @@ const contractSchema = new Schema({
     required: true,
     enum: ['active', 'completed', 'terminated'],
     default: 'active'
+  },
+  site: {
+    type: Schema.Types.ObjectId,
+    ref: 'Site',
+    required: false
   }
 }, {
   timestamps: true,

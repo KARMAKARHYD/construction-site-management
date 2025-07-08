@@ -11,7 +11,9 @@ router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontract
 
 // Add a new contract
 router.route('/add').post(auth, authorizeRoles('Manager'), (req, res) => {
-  const newContract = new Contract(req.body);
+  const { subcontractor, contractType, rate, startDate, endDate, milestones, status, site } = req.body;
+
+  const newContract = new Contract({ subcontractor, contractType, rate, startDate, endDate, milestones, status, site });
 
   newContract.save()
     .then(() => res.json('Contract added!'))
@@ -36,6 +38,7 @@ router.route('/update/:id').post(auth, authorizeRoles('Manager'), (req, res) => 
       contract.endDate = req.body.endDate;
       contract.milestones = req.body.milestones;
       contract.status = req.body.status;
+      contract.site = req.body.site;
 
       contract.save()
         .then(() => res.json('Contract updated!'))

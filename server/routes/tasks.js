@@ -13,8 +13,10 @@ router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontract
 });
 
 // Add a new task
-router.route('/add').post(auth, authorizeRoles('Manager', 'Supervisor'), (req, res) => {
-  const newTask = new Task(req.body);
+router.route('/add').post(auth, authorizeRoles('Manager', 'Supervisor'), async (req, res) => {
+  const { title, description, assignedTo, assignedBy, dueDate, status, site } = req.body;
+
+  const newTask = new Task({ title, description, assignedTo, assignedBy, dueDate, status, site });
 
   newTask.save()
     .then(async () => {
@@ -50,6 +52,7 @@ router.route('/update/:id').post(auth, authorizeRoles('Manager', 'Supervisor', '
       task.dueDate = req.body.dueDate;
       task.status = req.body.status;
       task.progressUpdates.push(req.body.progressUpdate);
+      task.site = req.body.site;
 
       task.save()
         .then(() => res.json('Task updated!'))

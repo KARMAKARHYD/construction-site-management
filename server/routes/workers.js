@@ -11,7 +11,9 @@ router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper'
 
 // Add a new worker
 router.route('/add').post(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor'), (req, res) => {
-  const newWorker = new Worker(req.body);
+  const { subcontractor, name, phone, dailyWage, status, site } = req.body;
+
+  const newWorker = new Worker({ subcontractor, name, phone, dailyWage, status, site });
 
   newWorker.save()
     .then(() => res.json('Worker added!'))
@@ -34,6 +36,7 @@ router.route('/update/:id').post(auth, authorizeRoles('Manager', 'Supervisor', '
       worker.phone = req.body.phone;
       worker.dailyWage = req.body.dailyWage;
       worker.status = req.body.status;
+      worker.site = req.body.site;
 
       worker.save()
         .then(() => res.json('Worker updated!'))

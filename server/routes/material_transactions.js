@@ -16,7 +16,9 @@ router.route('/').get(auth, authorizeRoles('Storekeeper', 'Manager', 'Supervisor
 
 // Add a new material transaction
 router.route('/add').post(auth, authorizeRoles('Storekeeper', 'Manager'), async (req, res) => {
-  const newMaterialTransaction = new MaterialTransaction(req.body);
+  const { material, quantity, type, recordedBy, issuedTo, issuedToModel, notes, site } = req.body;
+
+  const newMaterialTransaction = new MaterialTransaction({ material, quantity, type, recordedBy, issuedTo, issuedToModel, notes, site });
 
   try {
     await newMaterialTransaction.save();
@@ -70,6 +72,7 @@ router.route('/update/:id').post(auth, authorizeRoles('Storekeeper', 'Manager'),
       transaction.issuedTo = req.body.issuedTo;
       transaction.issuedToModel = req.body.issuedToModel;
       transaction.notes = req.body.notes;
+      transaction.site = req.body.site;
 
       transaction.save()
         .then(() => res.json('Material transaction updated!'))

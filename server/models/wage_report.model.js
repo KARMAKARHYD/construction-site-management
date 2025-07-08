@@ -44,6 +44,11 @@ const wageReportSchema = new Schema({
     type: String,
     enum: ['pending', 'paid'],
     default: 'pending'
+  },
+  site: {
+    type: Schema.Types.ObjectId,
+    ref: 'Site',
+    required: false
   }
 }, {
   timestamps: true,

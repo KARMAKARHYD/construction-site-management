@@ -13,7 +13,9 @@ router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) 
 
 // Add a new payment
 router.route('/add').post(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
-  const newPayment = new Payment(req.body);
+  const { subcontractor, contract, amount, paymentDate, paymentType, notes, site } = req.body;
+
+  const newPayment = new Payment({ subcontractor, contract, amount, paymentDate, paymentType, notes, site });
 
   newPayment.save()
     .then(() => res.json('Payment added!'))
@@ -39,6 +41,7 @@ router.route('/update/:id').post(auth, authorizeRoles('Manager', 'Timekeeper'), 
       payment.paymentDate = req.body.paymentDate;
       payment.paymentType = req.body.paymentType;
       payment.notes = req.body.notes;
+      payment.site = req.body.site;
 
       payment.save()
         .then(() => res.json('Payment updated!'))

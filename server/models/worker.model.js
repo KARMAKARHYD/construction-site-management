@@ -24,6 +24,11 @@ const workerSchema = new Schema({
     type: String,
     enum: ['active', 'inactive'],
     default: 'active'
+  },
+  site: {
+    type: Schema.Types.ObjectId,
+    ref: 'Site',
+    required: false
   }
 }, {
   timestamps: true,

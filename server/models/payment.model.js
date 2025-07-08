@@ -28,6 +28,11 @@ const paymentSchema = new Schema({
   notes: {
     type: String,
     trim: true
+  },
+  site: {
+    type: Schema.Types.ObjectId,
+    ref: 'Site',
+    required: false
   }
 }, {
   timestamps: true,
