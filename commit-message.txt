@@ -1,1 +1,1 @@
-Add ManagerPaymentView and TimekeeperAttendanceView components and integrate into Dashboard
+Add ManagerContractView component and integrate into Dashboard

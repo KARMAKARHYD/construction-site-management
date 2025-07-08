@@ -5,6 +5,7 @@ import SupervisorTaskView from './SupervisorTaskView';
 import StorekeeperMaterialView from './StorekeeperMaterialView';
 import ManagerPaymentView from './ManagerPaymentView';
 import TimekeeperAttendanceView from './TimekeeperAttendanceView';
+import ManagerContractView from './ManagerContractView';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -59,6 +60,7 @@ function Dashboard() {
         <div>
           <h4>Manager Dashboard</h4>
           <ManagerPaymentView />
+          <ManagerContractView />
         </div>
       )}
 
