@@ -1,1 +1,1 @@
-Fix duplicate route declarations in index.js
+Implement conditional navigation and logout in frontend
