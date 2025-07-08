@@ -39,7 +39,7 @@ router.route('/update/:id').post(auth, authorizeRoles('Manager', 'Supervisor', '
       task.assignedBy = req.body.assignedBy;
       task.dueDate = req.body.dueDate;
       task.status = req.body.status;
-      task.progressUpdates = req.body.progressUpdates;
+      task.progressUpdates.push(req.body.progressUpdate);
 
       task.save()
         .then(() => res.json('Task updated!'))

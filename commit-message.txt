@@ -1,1 +1,1 @@
-Implement conditional navigation and logout in frontend
+Add file upload functionality and integrate with tasks
