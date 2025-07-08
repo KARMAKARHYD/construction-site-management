@@ -1,5 +1,7 @@
 const router = require('express').Router();
 let MaterialTransaction = require('../models/material_transaction.model');
+let Material = require('../models/material.model');
+let Notification = require('../models/notification.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all material transactions
@@ -13,12 +15,37 @@ router.route('/').get(auth, authorizeRoles('Storekeeper', 'Manager', 'Supervisor
 });
 
 // Add a new material transaction
-router.route('/add').post(auth, authorizeRoles('Storekeeper', 'Manager'), (req, res) => {
+router.route('/add').post(auth, authorizeRoles('Storekeeper', 'Manager'), async (req, res) => {
   const newMaterialTransaction = new MaterialTransaction(req.body);
 
-  newMaterialTransaction.save()
-    .then(() => res.json('Material transaction added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
+  try {
+    await newMaterialTransaction.save();
+
+    // Update material stock and check for low stock
+    const material = await Material.findById(newMaterialTransaction.material);
+    if (material) {
+      if (newMaterialTransaction.type === 'in') {
+        material.currentStock += newMaterialTransaction.quantity;
+      } else if (newMaterialTransaction.type === 'out') {
+        material.currentStock -= newMaterialTransaction.quantity;
+      }
+      await material.save();
+
+      if (material.currentStock <= material.minStockLevel) {
+        // Create a notification for low stock
+        const newNotification = new Notification({
+          recipient: req.user.id, // Assuming the storekeeper or manager should be notified
+          message: `Material ${material.name} is running low! Current stock: ${material.currentStock} ${material.unit}. Minimum stock level: ${material.minStockLevel} ${material.unit}.`,
+          type: 'material_low_stock'
+        });
+        await newNotification.save();
+      }
+    }
+
+    res.json('Material transaction added and stock updated!');
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
 });
 
 // Get a specific material transaction

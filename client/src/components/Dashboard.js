@@ -4,8 +4,9 @@ import WorkerTaskView from './WorkerTaskView';
 import SupervisorTaskView from './SupervisorTaskView';
 import StorekeeperMaterialView from './StorekeeperMaterialView';
 import ManagerPaymentView from './ManagerPaymentView';
-import TimekeeperAttendanceView from './TimekeeperAttendanceView';
 import ManagerContractView from './ManagerContractView';
+import TimekeeperAttendanceView from './TimekeeperAttendanceView';
+import NotificationList from './NotificationList';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -54,6 +55,7 @@ function Dashboard() {
     <div>
       <h2>Welcome, {user.username}!</h2>
       <h3>Your Role: {user.role}</h3>
+      <NotificationList />
 
       {/* Render content based on user role */}
       {user.role === 'Manager' && (

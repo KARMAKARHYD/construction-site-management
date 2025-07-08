@@ -1,5 +1,6 @@
 const router = require('express').Router();
 let Task = require('../models/task.model');
+let Notification = require('../models/notification.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all tasks
@@ -16,7 +17,16 @@ router.route('/add').post(auth, authorizeRoles('Manager', 'Supervisor'), (req, r
   const newTask = new Task(req.body);
 
   newTask.save()
-    .then(() => res.json('Task added!'))
+    .then(async () => {
+      // Create a notification for the assigned subcontractor
+      const newNotification = new Notification({
+        recipient: newTask.assignedTo,
+        message: `You have been assigned a new task: ${newTask.title}`,
+        type: 'task_assigned'
+      });
+      await newNotification.save();
+      res.json('Task added and notification sent!');
+    })
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
