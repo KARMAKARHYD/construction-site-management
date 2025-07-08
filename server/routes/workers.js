@@ -3,11 +3,20 @@ let Worker = require('../models/worker.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all workers
-router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper', 'Subcontractor'), (req, res) => {
-  const filter = req.query.siteId ? { site: req.query.siteId } : {};
-  Worker.find(filter)
-    .then(workers => res.json(workers))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper', 'Subcontractor'), async (req, res) => {
+  try {
+    let filter = {};
+    if (req.user.role !== 'Manager' && req.user.site) {
+      filter.site = req.user.site;
+    }
+    if (req.query.siteId) {
+      filter.site = req.query.siteId;
+    }
+    const workers = await Worker.find(filter);
+    res.json(workers);
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
 });
 
 // Add a new worker

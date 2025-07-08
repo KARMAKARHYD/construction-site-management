@@ -5,14 +5,23 @@ let Notification = require('../models/notification.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all material transactions
-router.route('/').get(auth, authorizeRoles('Storekeeper', 'Manager', 'Supervisor'), (req, res) => {
-  const filter = req.query.siteId ? { site: req.query.siteId } : {};
-  MaterialTransaction.find(filter)
-    .populate('material', 'name unit')
-    .populate('recordedBy', 'username')
-    .populate('issuedTo', 'name')
-    .then(transactions => res.json(transactions))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.route('/').get(auth, authorizeRoles('Storekeeper', 'Manager', 'Supervisor'), async (req, res) => {
+  try {
+    let filter = {};
+    if (req.user.role !== 'Manager' && req.user.site) {
+      filter.site = req.user.site;
+    }
+    if (req.query.siteId) {
+      filter.site = req.query.siteId;
+    }
+    const transactions = await MaterialTransaction.find(filter)
+      .populate('material', 'name unit')
+      .populate('recordedBy', 'username')
+      .populate('issuedTo', 'name');
+    res.json(transactions);
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
 });
 
 // Add a new material transaction

@@ -1,1 +1,1 @@
-Integrate Bootstrap and refactor Login/Register UI
+Implement site-based authorization in backend routes

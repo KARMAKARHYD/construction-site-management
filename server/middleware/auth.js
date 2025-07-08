@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/user.model'); // Import the User model
 
-function auth(req, res, next) {
+async function auth(req, res, next) {
   const token = req.header('x-auth-token');
 
   // Check for token
@@ -11,8 +12,13 @@ function auth(req, res, next) {
   try {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // Add user from payload
-    req.user = decoded;
+
+    // Fetch the full user object and attach it to the request
+    const user = await User.findById(decoded.id).select('-password');
+    if (!user) {
+      return res.status(401).json({ msg: 'User not found, authorization denied' });
+    }
+    req.user = user;
     next();
   } catch (e) {
     res.status(400).json({ msg: 'Token is not valid' });

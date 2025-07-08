@@ -3,14 +3,23 @@ let Issue = require('../models/issue.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all issues
-router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor'), (req, res) => {
-  const filter = req.query.siteId ? { site: req.query.siteId } : {};
-  Issue.find(filter)
-    .populate('reportedBy', 'username')
-    .populate('assignedTo', 'username')
-    .populate('site', 'name')
-    .then(issues => res.json(issues))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor'), async (req, res) => {
+  try {
+    let filter = {};
+    if (req.user.role !== 'Manager' && req.user.site) {
+      filter.site = req.user.site;
+    }
+    if (req.query.siteId) {
+      filter.site = req.query.siteId;
+    }
+    const issues = await Issue.find(filter)
+      .populate('reportedBy', 'username')
+      .populate('assignedTo', 'username')
+      .populate('site', 'name');
+    res.json(issues);
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
 });
 
 // Add a new issue

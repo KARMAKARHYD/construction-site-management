@@ -3,13 +3,22 @@ let Payment = require('../models/payment.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all payments
-router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
-  const filter = req.query.siteId ? { site: req.query.siteId } : {};
-  Payment.find(filter)
-    .populate('subcontractor', 'name')
-    .populate('contract', 'contractType')
-    .then(payments => res.json(payments))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), async (req, res) => {
+  try {
+    let filter = {};
+    if (req.user.role !== 'Manager' && req.user.site) {
+      filter.site = req.user.site;
+    }
+    if (req.query.siteId) {
+      filter.site = req.query.siteId;
+    }
+    const payments = await Payment.find(filter)
+      .populate('subcontractor', 'name')
+      .populate('contract', 'contractType');
+    res.json(payments);
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
 });
 
 // Add a new payment

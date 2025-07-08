@@ -4,13 +4,22 @@ let Notification = require('../models/notification.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all tasks
-router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor', 'Worker'), (req, res) => {
-  const filter = req.query.siteId ? { site: req.query.siteId } : {};
-  Task.find(filter)
-    .populate('assignedTo', 'name') // Populate subcontractor name
-    .populate('assignedBy', 'username') // Populate user who assigned the task
-    .then(tasks => res.json(tasks))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor', 'Worker'), async (req, res) => {
+  try {
+    let filter = {};
+    if (req.user.role !== 'Manager' && req.user.site) {
+      filter.site = req.user.site;
+    }
+    if (req.query.siteId) {
+      filter.site = req.query.siteId;
+    }
+    const tasks = await Task.find(filter)
+      .populate('assignedTo', 'name') // Populate subcontractor name
+      .populate('assignedBy', 'username'); // Populate user who assigned the task
+    res.json(tasks);
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
 });
 
 // Add a new task

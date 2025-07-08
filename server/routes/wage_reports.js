@@ -3,13 +3,22 @@ let WageReport = require('../models/wage_report.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all wage reports
-router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
-  const filter = req.query.siteId ? { site: req.query.siteId } : {};
-  WageReport.find(filter)
-    .populate('worker', 'name')
-    .populate('subcontractor', 'name')
-    .then(reports => res.json(reports))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), async (req, res) => {
+  try {
+    let filter = {};
+    if (req.user.role !== 'Manager' && req.user.site) {
+      filter.site = req.user.site;
+    }
+    if (req.query.siteId) {
+      filter.site = req.query.siteId;
+    }
+    const wageReports = await WageReport.find(filter)
+      .populate('worker', 'name')
+      .populate('subcontractor', 'name');
+    res.json(wageReports);
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
 });
 
 // Add a new wage report

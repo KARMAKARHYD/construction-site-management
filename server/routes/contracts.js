@@ -3,11 +3,20 @@ let Contract = require('../models/contract.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all contracts
-router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor'), (req, res) => {
-  const filter = req.query.siteId ? { site: req.query.siteId } : {};
-  Contract.find(filter)
-    .then(contracts => res.json(contracts))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor'), async (req, res) => {
+  try {
+    let filter = {};
+    if (req.user.role !== 'Manager' && req.user.site) {
+      filter.site = req.user.site;
+    }
+    if (req.query.siteId) {
+      filter.site = req.query.siteId;
+    }
+    const contracts = await Contract.find(filter);
+    res.json(contracts);
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
 });
 
 // Add a new contract

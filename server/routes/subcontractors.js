@@ -3,11 +3,20 @@ let Subcontractor = require('../models/subcontractor.model');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all subcontractors
-router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper'), (req, res) => {
-  const filter = req.query.siteId ? { site: req.query.siteId } : {};
-  Subcontractor.find(filter)
-    .then(subcontractors => res.json(subcontractors))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper'), async (req, res) => {
+  try {
+    let filter = {};
+    if (req.user.role !== 'Manager' && req.user.site) {
+      filter.site = req.user.site;
+    }
+    if (req.query.siteId) {
+      filter.site = req.query.siteId;
+    }
+    const subcontractors = await Subcontractor.find(filter);
+    res.json(subcontractors);
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
 });
 
 // Add a new subcontractor
