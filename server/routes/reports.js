@@ -51,6 +51,7 @@ router.get('/wage_reports/excel', auth, authorizeRoles('Manager', 'Timekeeper'),
     const worksheet = workbook.addWorksheet('Wage Reports');
 
     worksheet.columns = [
+      { header: 'Report ID', key: 'reportId', width: 25 },
       { header: 'Worker', key: 'workerName', width: 20 },
       { header: 'Subcontractor', key: 'subcontractorName', width: 20 },
       { header: 'From Date', key: 'dateFrom', width: 15 },
@@ -60,11 +61,13 @@ router.get('/wage_reports/excel', auth, authorizeRoles('Manager', 'Timekeeper'),
       { header: 'Total Wage', key: 'totalWage', width: 15 },
       { header: 'Advances', key: 'advances', width: 10 },
       { header: 'Net Pay', key: 'netPay', width: 15 },
-      { header: 'Status', key: 'status', width: 10 }
+      { header: 'Status', key: 'status', width: 10 },
+      { header: 'Notes', key: 'notes', width: 30 }
     ];
 
     wageReports.forEach(report => {
       worksheet.addRow({
+        reportId: report._id,
         workerName: report.worker ? report.worker.name : 'N/A',
         subcontractorName: report.subcontractor ? report.subcontractor.name : 'N/A',
         dateFrom: new Date(report.dateFrom).toLocaleDateString(),
@@ -74,7 +77,8 @@ router.get('/wage_reports/excel', auth, authorizeRoles('Manager', 'Timekeeper'),
         totalWage: report.totalWage,
         advances: report.advances,
         netPay: report.netPay,
-        status: report.status
+        status: report.status,
+        notes: report.notes || 'N/A'
       });
     });
 
