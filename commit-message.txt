@@ -1,1 +1,1 @@
-Add report generation functionality (PDF and Excel)
+Final fix for duplicate route declarations in index.js
