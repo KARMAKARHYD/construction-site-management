@@ -27,17 +27,6 @@ const materialsRouter = require('./routes/materials');
 const materialTransactionsRouter = require('./routes/material_transactions');
 const paymentsRouter = require('./routes/payments');
 const wageReportsRouter = require('./routes/wage_reports');
-
-app.use('/users', usersRouter);
-app.use('/subcontractors', subcontractorsRouter);
-app.use('/contracts', contractsRouter);
-app.use('/workers', workersRouter);
-app.use('/attendance', attendanceRouter);
-app.use('/tasks', tasksRouter);
-app.use('/materials', materialsRouter);
-app.use('/material_transactions', materialTransactionsRouter);
-app.use('/payments', paymentsRouter);
-const wageReportsRouter = require('./routes/wage_reports');
 const uploadsRouter = require('./routes/uploads');
 
 app.use('/users', usersRouter);

@@ -1,1 +1,1 @@
-Add file upload functionality and integrate with tasks
+Add WorkerTaskView component and integrate into Dashboard
