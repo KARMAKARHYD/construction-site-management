@@ -21,8 +21,10 @@ const subcontractorsRouter = require('./routes/subcontractors');
 const contractsRouter = require('./routes/contracts');
 const workersRouter = require('./routes/workers');
 const attendanceRouter = require('./routes/attendance');
+const tasksRouter = require('./routes/tasks');
 
 app.use('/subcontractors', subcontractorsRouter);
 app.use('/contracts', contractsRouter);
 app.use('/workers', workersRouter);
 app.use('/attendance', attendanceRouter);
+app.use('/tasks', tasksRouter);
