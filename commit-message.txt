@@ -1,1 +1,1 @@
-Add payment and wage report models and routes
+Add basic frontend login and registration components
