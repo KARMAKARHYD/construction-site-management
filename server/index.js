@@ -27,4 +27,14 @@ app.use('/subcontractors', subcontractorsRouter);
 app.use('/contracts', contractsRouter);
 app.use('/workers', workersRouter);
 app.use('/attendance', attendanceRouter);
+const tasksRouter = require('./routes/tasks');
+const materialsRouter = require('./routes/materials');
+const materialTransactionsRouter = require('./routes/material_transactions');
+
+app.use('/subcontractors', subcontractorsRouter);
+app.use('/contracts', contractsRouter);
+app.use('/workers', workersRouter);
+app.use('/attendance', attendanceRouter);
 app.use('/tasks', tasksRouter);
+app.use('/materials', materialsRouter);
+app.use('/material_transactions', materialTransactionsRouter);
