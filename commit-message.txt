@@ -1,1 +1,1 @@
-Implement authentication middleware and role-based access control
+Update frontend authentication to handle token and redirection

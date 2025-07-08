@@ -1,24 +1,30 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('Subcontractor'); // Default role
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:5000/users/register', { username, password, role });
-      console.log(res.data); // Handle successful registration
+      localStorage.setItem('token', res.data.token);
+      navigate('/dashboard');
     } catch (err) {
-      console.error(err.response.data); // Handle registration error
+      setError(err.response.data.msg || 'Registration failed.');
+      console.error(err.response.data);
     }
   };
 
   return (
     <div>
       <h2>Register</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
