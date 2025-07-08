@@ -1,0 +1,46 @@
+const router = require('express').Router();
+let Contract = require('../models/contract.model');
+
+// Get all contracts
+router.route('/').get((req, res) => {
+  Contract.find()
+    .then(contracts => res.json(contracts))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+// Add a new contract
+router.route('/add').post((req, res) => {
+  const newContract = new Contract(req.body);
+
+  newContract.save()
+    .then(() => res.json('Contract added!'))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+// Get a specific contract
+router.route('/:id').get((req, res) => {
+  Contract.findById(req.params.id)
+    .then(contract => res.json(contract))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+// Update a contract
+router.route('/update/:id').post((req, res) => {
+  Contract.findById(req.params.id)
+    .then(contract => {
+      contract.subcontractor = req.body.subcontractor;
+      contract.contractType = req.body.contractType;
+      contract.rate = req.body.rate;
+      contract.startDate = req.body.startDate;
+      contract.endDate = req.body.endDate;
+      contract.milestones = req.body.milestones;
+      contract.status = req.body.status;
+
+      contract.save()
+        .then(() => res.json('Contract updated!'))
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+module.exports = router;

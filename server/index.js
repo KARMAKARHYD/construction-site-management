@@ -17,4 +17,8 @@ connection.once('open', () => {
 
 const usersRouter = require('./routes/users');
 
-app.use('/users', usersRouter);
+const subcontractorsRouter = require('./routes/subcontractors');
+const contractsRouter = require('./routes/contracts');
+
+app.use('/subcontractors', subcontractorsRouter);
+app.use('/contracts', contractsRouter);
