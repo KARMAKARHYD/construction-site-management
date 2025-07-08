@@ -1,1 +1,1 @@
-Add SupervisorTaskView component and integrate into Dashboard
+Add StorekeeperMaterialView component and integrate into Dashboard
