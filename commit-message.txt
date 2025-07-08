@@ -1,1 +1,1 @@
-Add material management models and routes
+Add payment and wage report models and routes
