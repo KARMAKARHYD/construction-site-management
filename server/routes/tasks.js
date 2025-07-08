@@ -5,7 +5,8 @@ const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all tasks
 router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor', 'Worker'), (req, res) => {
-  Task.find()
+  const filter = req.query.siteId ? { site: req.query.siteId } : {};
+  Task.find(filter)
     .populate('assignedTo', 'name') // Populate subcontractor name
     .populate('assignedBy', 'username') // Populate user who assigned the task
     .then(tasks => res.json(tasks))

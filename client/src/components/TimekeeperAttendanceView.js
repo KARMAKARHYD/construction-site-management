@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function TimekeeperAttendanceView() {
+function TimekeeperAttendanceView({ selectedSite }) {
   const [workers, setWorkers] = useState([]);
   const [subcontractors, setSubcontractors] = useState([]);
   const [attendanceRecords, setAttendanceRecords] = useState([]);
@@ -15,7 +15,7 @@ function TimekeeperAttendanceView() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedSite]);
 
   const fetchData = async () => {
     const token = localStorage.getItem('token');
@@ -26,10 +26,14 @@ function TimekeeperAttendanceView() {
     }
 
     try {
+      const config = {
+        headers: { 'x-auth-token': token },
+        params: { siteId: selectedSite }
+      };
       const [workersRes, subcontractorsRes, attendanceRes] = await Promise.all([
-        axios.get('http://localhost:5000/workers', { headers: { 'x-auth-token': token } }),
-        axios.get('http://localhost:5000/subcontractors', { headers: { 'x-auth-token': token } }),
-        axios.get('http://localhost:5000/attendance', { headers: { 'x-auth-token': token } })
+        axios.get('http://localhost:5000/workers', config),
+        axios.get('http://localhost:5000/subcontractors', config),
+        axios.get('http://localhost:5000/attendance', config)
       ]);
       setWorkers(workersRes.data);
       setSubcontractors(subcontractorsRes.data);

@@ -4,7 +4,8 @@ const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all contracts
 router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor'), (req, res) => {
-  Contract.find()
+  const filter = req.query.siteId ? { site: req.query.siteId } : {};
+  Contract.find(filter)
     .then(contracts => res.json(contracts))
     .catch(err => res.status(400).json('Error: ' + err));
 });

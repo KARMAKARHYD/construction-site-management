@@ -4,7 +4,8 @@ const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all wage reports
 router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
-  WageReport.find()
+  const filter = req.query.siteId ? { site: req.query.siteId } : {};
+  WageReport.find(filter)
     .populate('worker', 'name')
     .populate('subcontractor', 'name')
     .then(reports => res.json(reports))

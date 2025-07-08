@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function SupervisorTaskView() {
+function SupervisorTaskView({ selectedSite }) {
   const [tasks, setTasks] = useState([]);
   const [subcontractors, setSubcontractors] = useState([]);
   const [users, setUsers] = useState([]);
@@ -16,7 +16,7 @@ function SupervisorTaskView() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedSite]);
 
   const fetchData = async () => {
     const token = localStorage.getItem('token');
@@ -27,9 +27,13 @@ function SupervisorTaskView() {
     }
 
     try {
+      const config = {
+        headers: { 'x-auth-token': token },
+        params: { siteId: selectedSite }
+      };
       const [tasksRes, subcontractorsRes, usersRes] = await Promise.all([
-        axios.get('http://localhost:5000/tasks', { headers: { 'x-auth-token': token } }),
-        axios.get('http://localhost:5000/subcontractors', { headers: { 'x-auth-token': token } }),
+        axios.get('http://localhost:5000/tasks', config),
+        axios.get('http://localhost:5000/subcontractors', config),
         axios.get('http://localhost:5000/users/user', { headers: { 'x-auth-token': token } })
       ]);
       setTasks(tasksRes.data);

@@ -4,7 +4,8 @@ const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all payments
 router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
-  Payment.find()
+  const filter = req.query.siteId ? { site: req.query.siteId } : {};
+  Payment.find(filter)
     .populate('subcontractor', 'name')
     .populate('contract', 'contractType')
     .then(payments => res.json(payments))

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function StorekeeperMaterialView() {
+function StorekeeperMaterialView({ selectedSite }) {
   const [materials, setMaterials] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ function StorekeeperMaterialView() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedSite]);
 
   const fetchData = async () => {
     const token = localStorage.getItem('token');
@@ -29,9 +29,13 @@ function StorekeeperMaterialView() {
     }
 
     try {
+      const config = {
+        headers: { 'x-auth-token': token },
+        params: { siteId: selectedSite }
+      };
       const [materialsRes, transactionsRes] = await Promise.all([
-        axios.get('http://localhost:5000/materials', { headers: { 'x-auth-token': token } }),
-        axios.get('http://localhost:5000/material_transactions', { headers: { 'x-auth-token': token } })
+        axios.get('http://localhost:5000/materials', config),
+        axios.get('http://localhost:5000/material_transactions', config)
       ]);
       setMaterials(materialsRes.data);
       setTransactions(transactionsRes.data);

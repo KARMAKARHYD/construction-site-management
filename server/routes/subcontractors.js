@@ -4,7 +4,8 @@ const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all subcontractors
 router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper'), (req, res) => {
-  Subcontractor.find()
+  const filter = req.query.siteId ? { site: req.query.siteId } : {};
+  Subcontractor.find(filter)
     .then(subcontractors => res.json(subcontractors))
     .catch(err => res.status(400).json('Error: ' + err));
 });

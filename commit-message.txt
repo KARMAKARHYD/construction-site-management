@@ -1,1 +1,1 @@
-Implement site management feature
+Implement site filtering in frontend components

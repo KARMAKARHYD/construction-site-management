@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function ManagerPaymentView() {
+function ManagerPaymentView({ selectedSite }) {
   const [payments, setPayments] = useState([]);
   const [wageReports, setWageReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,9 +20,13 @@ function ManagerPaymentView() {
     }
 
     try {
+      const config = {
+        headers: { 'x-auth-token': token },
+        params: { siteId: selectedSite }
+      };
       const [paymentsRes, wageReportsRes] = await Promise.all([
-        axios.get('http://localhost:5000/payments', { headers: { 'x-auth-token': token } }),
-        axios.get('http://localhost:5000/wage_reports', { headers: { 'x-auth-token': token } })
+        axios.get('http://localhost:5000/payments', config),
+        axios.get('http://localhost:5000/wage_reports', config)
       ]);
       setPayments(paymentsRes.data);
       setWageReports(wageReportsRes.data);
@@ -32,6 +36,10 @@ function ManagerPaymentView() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedSite]); // Re-fetch data when selectedSite changes
 
   if (loading) {
     return <div>Loading payment data...</div>;

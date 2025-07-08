@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function WorkerTaskView() {
+function WorkerTaskView({ selectedSite }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ function WorkerTaskView() {
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [selectedSite]);
 
   const fetchTasks = async () => {
     const token = localStorage.getItem('token');
@@ -24,11 +24,11 @@ function WorkerTaskView() {
     try {
       // In a real application, you would filter tasks by the logged-in worker's ID
       // For now, we fetch all and filter on the client side for simplicity
-      const res = await axios.get('http://localhost:5000/tasks', {
-        headers: {
-          'x-auth-token': token
-        }
-      });
+      const config = {
+        headers: { 'x-auth-token': token },
+        params: { siteId: selectedSite }
+      };
+      const res = await axios.get('http://localhost:5000/tasks', config);
       // Assuming the backend returns tasks with assignedTo populated with user ID
       // For now, we'll just display all tasks for demonstration
       setTasks(res.data);

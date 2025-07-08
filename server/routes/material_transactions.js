@@ -6,7 +6,8 @@ const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all material transactions
 router.route('/').get(auth, authorizeRoles('Storekeeper', 'Manager', 'Supervisor'), (req, res) => {
-  MaterialTransaction.find()
+  const filter = req.query.siteId ? { site: req.query.siteId } : {};
+  MaterialTransaction.find(filter)
     .populate('material', 'name unit')
     .populate('recordedBy', 'username')
     .populate('issuedTo', 'name')

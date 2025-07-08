@@ -8,9 +8,11 @@ import TimekeeperAttendanceView from './TimekeeperAttendanceView';
 import NotificationList from './NotificationList';
 import ManagerContractView from './ManagerContractView';
 import SiteManagementView from './SiteManagementView';
+import SiteSelector from './SiteSelector';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
+  const [selectedSite, setSelectedSite] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -56,15 +58,16 @@ function Dashboard() {
     <div>
       <h2>Welcome, {user.username}!</h2>
       <h3>Your Role: {user.role}</h3>
+      <SiteSelector onSelectSite={setSelectedSite} />
       <NotificationList />
 
       {/* Render content based on user role */}
       {user.role === 'Manager' && (
         <div>
           <h4>Manager Dashboard</h4>
-          <ManagerPaymentView />
-          <ManagerContractView />
-          <SiteManagementView />
+          <ManagerPaymentView selectedSite={selectedSite} />
+          <ManagerContractView selectedSite={selectedSite} />
+          <SiteManagementView selectedSite={selectedSite} />
         </div>
       )}
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function ManagerContractView() {
+function ManagerContractView({ selectedSite }) {
   const [subcontractors, setSubcontractors] = useState([]);
   const [contracts, setContracts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +16,7 @@ function ManagerContractView() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedSite]);
 
   const fetchData = async () => {
     const token = localStorage.getItem('token');
@@ -27,9 +27,13 @@ function ManagerContractView() {
     }
 
     try {
+      const config = {
+        headers: { 'x-auth-token': token },
+        params: { siteId: selectedSite }
+      };
       const [subcontractorsRes, contractsRes] = await Promise.all([
-        axios.get('http://localhost:5000/subcontractors', { headers: { 'x-auth-token': token } }),
-        axios.get('http://localhost:5000/contracts', { headers: { 'x-auth-token': token } })
+        axios.get('http://localhost:5000/subcontractors', config),
+        axios.get('http://localhost:5000/contracts', config)
       ]);
       setSubcontractors(subcontractorsRes.data);
       setContracts(contractsRes.data);
