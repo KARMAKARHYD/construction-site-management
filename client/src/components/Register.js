@@ -16,8 +16,16 @@ function Register() {
       localStorage.setItem('token', res.data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response.data.msg || 'Registration failed.');
-      console.error(err.response.data);
+      if (err.response) {
+        setError(err.response.data.msg || 'Registration failed.');
+        console.error(err.response.data);
+      } else if (err.request) {
+        setError('No response from server. Please check if the server is running.');
+        console.error(err.request);
+      } else {
+        setError('Error: ' + err.message);
+        console.error(err.message);
+      }
     }
   };
 
