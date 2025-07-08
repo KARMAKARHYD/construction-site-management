@@ -1,1 +1,1 @@
-Implement issue reporting and resolution feature
+Integrate Bootstrap and refactor Login/Register UI
