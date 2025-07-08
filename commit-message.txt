@@ -1,1 +1,1 @@
-Implement site filtering in frontend components
+Implement issue reporting and resolution feature

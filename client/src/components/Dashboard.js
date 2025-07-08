@@ -5,9 +5,9 @@ import SupervisorTaskView from './SupervisorTaskView';
 import StorekeeperMaterialView from './StorekeeperMaterialView';
 import ManagerPaymentView from './ManagerPaymentView';
 import TimekeeperAttendanceView from './TimekeeperAttendanceView';
-import NotificationList from './NotificationList';
 import ManagerContractView from './ManagerContractView';
 import SiteManagementView from './SiteManagementView';
+import SupervisorIssueView from './SupervisorIssueView';
 import SiteSelector from './SiteSelector';
 
 function Dashboard() {
@@ -74,7 +74,8 @@ function Dashboard() {
       {user.role === 'Supervisor' && (
         <div>
           <h4>Supervisor Dashboard</h4>
-          <SupervisorTaskView />
+          <SupervisorTaskView selectedSite={selectedSite} />
+          <SupervisorIssueView selectedSite={selectedSite} />
         </div>
       )}
 
