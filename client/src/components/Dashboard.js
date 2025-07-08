@@ -3,6 +3,8 @@ import axios from 'axios';
 import WorkerTaskView from './WorkerTaskView';
 import SupervisorTaskView from './SupervisorTaskView';
 import StorekeeperMaterialView from './StorekeeperMaterialView';
+import ManagerPaymentView from './ManagerPaymentView';
+import TimekeeperAttendanceView from './TimekeeperAttendanceView';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -56,7 +58,7 @@ function Dashboard() {
       {user.role === 'Manager' && (
         <div>
           <h4>Manager Dashboard</h4>
-          {/* Manager specific content */}
+          <ManagerPaymentView />
         </div>
       )}
 
@@ -91,7 +93,7 @@ function Dashboard() {
       {user.role === 'Timekeeper' && (
         <div>
           <h4>Timekeeper Dashboard</h4>
-          {/* Timekeeper specific content */}
+          <TimekeeperAttendanceView />
         </div>
       )}
     </div>
