@@ -1,1 +1,1 @@
-Update frontend authentication to handle token and redirection
+Fix duplicate route declarations in index.js
