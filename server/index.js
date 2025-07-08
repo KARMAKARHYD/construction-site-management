@@ -39,7 +39,22 @@ app.use('/materials', materialsRouter);
 app.use('/material_transactions', materialTransactionsRouter);
 app.use('/payments', paymentsRouter);
 app.use('/wage_reports', wageReportsRouter);
+const wageReportsRouter = require('./routes/wage_reports');
+const uploadsRouter = require('./routes/uploads');
+const reportsRouter = require('./routes/reports');
+
+app.use('/users', usersRouter);
+app.use('/subcontractors', subcontractorsRouter);
+app.use('/contracts', contractsRouter);
+app.use('/workers', workersRouter);
+app.use('/attendance', attendanceRouter);
+app.use('/tasks', tasksRouter);
+app.use('/materials', materialsRouter);
+app.use('/material_transactions', materialTransactionsRouter);
+app.use('/payments', paymentsRouter);
+app.use('/wage_reports', wageReportsRouter);
 app.use('/uploads', uploadsRouter);
+app.use('/reports', reportsRouter);
 
 app.use('/uploads', express.static('uploads'));
 

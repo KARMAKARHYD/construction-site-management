@@ -46,6 +46,7 @@ function ManagerPaymentView() {
       <h3>Payment Management (Manager View)</h3>
 
       <h4>Subcontractor Payments</h4>
+      <button onClick={() => window.open('http://localhost:5000/reports/payments/pdf', '_blank')}>Export Payments to PDF</button>
       {payments.length === 0 ? (
         <p>No payments recorded yet.</p>
       ) : (
@@ -76,6 +77,7 @@ function ManagerPaymentView() {
       )}
 
       <h4>Worker Wage Reports</h4>
+      <button onClick={() => window.open('http://localhost:5000/reports/wage_reports/excel', '_blank')}>Export Wage Reports to Excel</button>
       {wageReports.length === 0 ? (
         <p>No wage reports recorded yet.</p>
       ) : (

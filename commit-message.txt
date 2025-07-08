@@ -1,1 +1,1 @@
-Add ManagerContractView component and integrate into Dashboard
+Add report generation functionality (PDF and Excel)
