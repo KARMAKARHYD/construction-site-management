@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import WorkerTaskView from './WorkerTaskView';
+import SupervisorTaskView from './SupervisorTaskView';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -61,7 +62,7 @@ function Dashboard() {
       {user.role === 'Supervisor' && (
         <div>
           <h4>Supervisor Dashboard</h4>
-          {/* Supervisor specific content */}
+          <SupervisorTaskView />
         </div>
       )}
 

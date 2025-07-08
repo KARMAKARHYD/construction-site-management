@@ -1,1 +1,1 @@
-Add WorkerTaskView component and integrate into Dashboard
+Add SupervisorTaskView component and integrate into Dashboard
