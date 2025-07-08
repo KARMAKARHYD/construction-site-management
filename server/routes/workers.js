@@ -1,15 +1,16 @@
 const router = require('express').Router();
 let Worker = require('../models/worker.model');
+const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all workers
-router.route('/').get((req, res) => {
+router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper', 'Subcontractor'), (req, res) => {
   Worker.find()
     .then(workers => res.json(workers))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Add a new worker
-router.route('/add').post((req, res) => {
+router.route('/add').post(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor'), (req, res) => {
   const newWorker = new Worker(req.body);
 
   newWorker.save()
@@ -18,14 +19,14 @@ router.route('/add').post((req, res) => {
 });
 
 // Get a specific worker
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper', 'Subcontractor', 'Worker'), (req, res) => {
   Worker.findById(req.params.id)
     .then(worker => res.json(worker))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Update a worker
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor'), (req, res) => {
   Worker.findById(req.params.id)
     .then(worker => {
       worker.subcontractor = req.body.subcontractor;

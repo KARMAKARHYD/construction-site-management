@@ -1,15 +1,16 @@
 const router = require('express').Router();
 let Contract = require('../models/contract.model');
+const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all contracts
-router.route('/').get((req, res) => {
+router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor'), (req, res) => {
   Contract.find()
     .then(contracts => res.json(contracts))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Add a new contract
-router.route('/add').post((req, res) => {
+router.route('/add').post(auth, authorizeRoles('Manager'), (req, res) => {
   const newContract = new Contract(req.body);
 
   newContract.save()
@@ -18,14 +19,14 @@ router.route('/add').post((req, res) => {
 });
 
 // Get a specific contract
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor'), (req, res) => {
   Contract.findById(req.params.id)
     .then(contract => res.json(contract))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Update a contract
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post(auth, authorizeRoles('Manager'), (req, res) => {
   Contract.findById(req.params.id)
     .then(contract => {
       contract.subcontractor = req.body.subcontractor;

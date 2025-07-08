@@ -1,8 +1,9 @@
 const router = require('express').Router();
 let MaterialTransaction = require('../models/material_transaction.model');
+const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all material transactions
-router.route('/').get((req, res) => {
+router.route('/').get(auth, authorizeRoles('Storekeeper', 'Manager', 'Supervisor'), (req, res) => {
   MaterialTransaction.find()
     .populate('material', 'name unit')
     .populate('recordedBy', 'username')
@@ -12,7 +13,7 @@ router.route('/').get((req, res) => {
 });
 
 // Add a new material transaction
-router.route('/add').post((req, res) => {
+router.route('/add').post(auth, authorizeRoles('Storekeeper', 'Manager'), (req, res) => {
   const newMaterialTransaction = new MaterialTransaction(req.body);
 
   newMaterialTransaction.save()
@@ -21,7 +22,7 @@ router.route('/add').post((req, res) => {
 });
 
 // Get a specific material transaction
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(auth, authorizeRoles('Storekeeper', 'Manager', 'Supervisor'), (req, res) => {
   MaterialTransaction.findById(req.params.id)
     .populate('material', 'name unit')
     .populate('recordedBy', 'username')
@@ -31,7 +32,7 @@ router.route('/:id').get((req, res) => {
 });
 
 // Update a material transaction
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post(auth, authorizeRoles('Storekeeper', 'Manager'), (req, res) => {
   MaterialTransaction.findById(req.params.id)
     .then(transaction => {
       transaction.material = req.body.material;

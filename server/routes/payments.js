@@ -1,8 +1,9 @@
 const router = require('express').Router();
 let Payment = require('../models/payment.model');
+const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all payments
-router.route('/').get((req, res) => {
+router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
   Payment.find()
     .populate('subcontractor', 'name')
     .populate('contract', 'contractType')
@@ -11,7 +12,7 @@ router.route('/').get((req, res) => {
 });
 
 // Add a new payment
-router.route('/add').post((req, res) => {
+router.route('/add').post(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
   const newPayment = new Payment(req.body);
 
   newPayment.save()
@@ -20,7 +21,7 @@ router.route('/add').post((req, res) => {
 });
 
 // Get a specific payment
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(auth, authorizeRoles('Manager', 'Timekeeper', 'Subcontractor'), (req, res) => {
   Payment.findById(req.params.id)
     .populate('subcontractor', 'name')
     .populate('contract', 'contractType')
@@ -29,7 +30,7 @@ router.route('/:id').get((req, res) => {
 });
 
 // Update a payment
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
   Payment.findById(req.params.id)
     .then(payment => {
       payment.subcontractor = req.body.subcontractor;

@@ -1,8 +1,9 @@
 const router = require('express').Router();
 let Task = require('../models/task.model');
+const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all tasks
-router.route('/').get((req, res) => {
+router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor', 'Worker'), (req, res) => {
   Task.find()
     .populate('assignedTo', 'name') // Populate subcontractor name
     .populate('assignedBy', 'username') // Populate user who assigned the task
@@ -11,7 +12,7 @@ router.route('/').get((req, res) => {
 });
 
 // Add a new task
-router.route('/add').post((req, res) => {
+router.route('/add').post(auth, authorizeRoles('Manager', 'Supervisor'), (req, res) => {
   const newTask = new Task(req.body);
 
   newTask.save()
@@ -20,7 +21,7 @@ router.route('/add').post((req, res) => {
 });
 
 // Get a specific task
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor', 'Worker'), (req, res) => {
   Task.findById(req.params.id)
     .populate('assignedTo', 'name')
     .populate('assignedBy', 'username')
@@ -29,7 +30,7 @@ router.route('/:id').get((req, res) => {
 });
 
 // Update a task
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post(auth, authorizeRoles('Manager', 'Supervisor', 'Subcontractor'), (req, res) => {
   Task.findById(req.params.id)
     .then(task => {
       task.title = req.body.title;

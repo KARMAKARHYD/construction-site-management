@@ -1,1 +1,1 @@
-Add basic frontend login and registration components
+Implement authentication middleware and role-based access control

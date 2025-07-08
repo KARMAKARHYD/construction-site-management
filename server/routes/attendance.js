@@ -1,15 +1,16 @@
 const router = require('express').Router();
 let Attendance = require('../models/attendance.model');
+const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all attendance records
-router.route('/').get((req, res) => {
+router.route('/').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper', 'Subcontractor', 'Worker'), (req, res) => {
   Attendance.find()
     .then(attendance => res.json(attendance))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Add a new attendance record
-router.route('/add').post((req, res) => {
+router.route('/add').post(auth, authorizeRoles('Timekeeper', 'Subcontractor', 'Worker'), (req, res) => {
   const newAttendance = new Attendance(req.body);
 
   newAttendance.save()
@@ -18,14 +19,14 @@ router.route('/add').post((req, res) => {
 });
 
 // Get a specific attendance record
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(auth, authorizeRoles('Manager', 'Supervisor', 'Timekeeper', 'Subcontractor', 'Worker'), (req, res) => {
   Attendance.findById(req.params.id)
     .then(attendance => res.json(attendance))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Update an attendance record
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post(auth, authorizeRoles('Timekeeper', 'Subcontractor', 'Worker'), (req, res) => {
   Attendance.findById(req.params.id)
     .then(attendance => {
       attendance.worker = req.body.worker;

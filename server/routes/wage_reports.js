@@ -1,8 +1,9 @@
 const router = require('express').Router();
 let WageReport = require('../models/wage_report.model');
+const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all wage reports
-router.route('/').get((req, res) => {
+router.route('/').get(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
   WageReport.find()
     .populate('worker', 'name')
     .populate('subcontractor', 'name')
@@ -11,7 +12,7 @@ router.route('/').get((req, res) => {
 });
 
 // Add a new wage report
-router.route('/add').post((req, res) => {
+router.route('/add').post(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
   const newWageReport = new WageReport(req.body);
 
   newWageReport.save()
@@ -20,7 +21,7 @@ router.route('/add').post((req, res) => {
 });
 
 // Get a specific wage report
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(auth, authorizeRoles('Manager', 'Timekeeper', 'Worker'), (req, res) => {
   WageReport.findById(req.params.id)
     .populate('worker', 'name')
     .populate('subcontractor', 'name')
@@ -29,7 +30,7 @@ router.route('/:id').get((req, res) => {
 });
 
 // Update a wage report
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post(auth, authorizeRoles('Manager', 'Timekeeper'), (req, res) => {
   WageReport.findById(req.params.id)
     .then(report => {
       report.worker = req.body.worker;

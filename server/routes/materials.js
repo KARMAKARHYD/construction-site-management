@@ -1,15 +1,16 @@
 const router = require('express').Router();
 let Material = require('../models/material.model');
+const { auth, authorizeRoles } = require('../middleware/auth');
 
 // Get all materials
-router.route('/').get((req, res) => {
+router.route('/').get(auth, authorizeRoles('Storekeeper', 'Manager', 'Supervisor'), (req, res) => {
   Material.find()
     .then(materials => res.json(materials))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Add a new material
-router.route('/add').post((req, res) => {
+router.route('/add').post(auth, authorizeRoles('Storekeeper', 'Manager'), (req, res) => {
   const newMaterial = new Material(req.body);
 
   newMaterial.save()
@@ -18,14 +19,14 @@ router.route('/add').post((req, res) => {
 });
 
 // Get a specific material
-router.route('/:id').get((req, res) => {
+router.route('/:id').get(auth, authorizeRoles('Storekeeper', 'Manager', 'Supervisor'), (req, res) => {
   Material.findById(req.params.id)
     .then(material => res.json(material))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Update a material
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post(auth, authorizeRoles('Storekeeper', 'Manager'), (req, res) => {
   Material.findById(req.params.id)
     .then(material => {
       material.name = req.body.name;
