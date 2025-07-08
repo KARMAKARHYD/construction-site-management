@@ -28,7 +28,7 @@ router.route('/register').post((req, res) => {
           newUser.save()
             .then(user => {
               jwt.sign(
-                { id: user.id },
+                { id: user.id, role: user.role }, // Include role in the token payload
                 process.env.JWT_SECRET,
                 { expiresIn: 3600 },
                 (err, token) => {
@@ -66,7 +66,7 @@ router.route('/login').post((req, res) => {
           if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
 
           jwt.sign(
-            { id: user.id },
+            { id: user.id, role: user.role }, // Include role in the token payload
             process.env.JWT_SECRET,
             { expiresIn: 3600 },
             (err, token) => {
