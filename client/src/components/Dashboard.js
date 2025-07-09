@@ -9,6 +9,7 @@ import ManagerContractView from './ManagerContractView';
 import SiteManagementView from './SiteManagementView';
 import SupervisorIssueView from './SupervisorIssueView';
 import SiteSelector from './SiteSelector';
+import NotificationList from './NotificationList'; // Explicitly re-adding this import
 
 function Dashboard() {
   const [user, setUser] = useState(null);
